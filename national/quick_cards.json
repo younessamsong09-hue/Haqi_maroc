@@ -1,6 +1,6 @@
 [
   {"title": "الحماية القانونية", "icon": "fa-balance-scale", "search_term": "حكرة"},
-  {"title": "الوثائق الرسمية", "icon": "fa-id-card", "search_term": "باسبور"},
+  {"title": "المحرر الإداري", "icon": "fa-file-signature", "search_term": "طلب"},
   {"title": "المالية والرسوم", "icon": "fa-coins", "search_term": "مالية"},
   {"title": "الرعاية الصحية", "icon": "fa-hospital-user", "search_term": "دواء"}
 ]
