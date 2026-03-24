@@ -1,6 +1,6 @@
 [
-  {"title": "الحماية القانونية", "icon": "fa-balance-scale", "search_term": "شكاية"},
+  {"title": "الحماية القانونية", "icon": "fa-balance-scale", "search_term": "حكرة"},
   {"title": "الوثائق الرسمية", "icon": "fa-id-card", "search_term": "باسبور"},
-  {"title": "المالية والرسوم", "icon": "fa-coins", "search_term": "تمبر"},
+  {"title": "المالية والرسوم", "icon": "fa-coins", "search_term": "مالية"},
   {"title": "الرعاية الصحية", "icon": "fa-hospital-user", "search_term": "دواء"}
 ]
