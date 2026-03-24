@@ -5,6 +5,7 @@ async function openEditor(term) {
     area.innerHTML = '<div class="loader">جاري استدعاء القطاع السيادي...</div>';
 
     const map = {
+        'ذكاء': 'intelligence.js',
         'حكرة': 'legal.js',
         'وثائق': 'docs.js',
         'مالية': 'finance.js',
