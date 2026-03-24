@@ -3,40 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حقي المغرب - Haqi Maroc</title>
+    <title>حقي المغرب - المحرر الإداري</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #1e5631; --secondary: #c1272d; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; }
-        .header { background: var(--primary); color: white; padding: 30px; text-align: center; border-radius: 0 0 40px 40px; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
+        .header { background: var(--primary); color: white; padding: 25px; text-align: center; border-radius: 0 0 30px 30px; }
         .search-container { max-width: 500px; margin: -25px auto 20px; padding: 0 15px; }
-        .search-box { display: flex; background: white; padding: 8px; border-radius: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); align-items: center; }
-        .search-box input { border: none; flex: 1; padding: 10px; font-size: 16px; outline: none; }
-        .btn-voice { background: none; border: none; color: var(--primary); font-size: 20px; cursor: pointer; padding: 0 10px; }
-        .btn-search { background: #333; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; }
-        .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; max-width: 600px; margin: auto; }
-        .card { background: white; padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .card i { font-size: 22px; color: var(--primary); margin-bottom: 8px; }
+        .search-box { display: flex; background: white; padding: 10px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .search-box input { border: none; flex: 1; padding: 10px; outline: none; font-size: 16px; }
+        .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; max-width: 600px; margin: auto; }
+        .card { background: white; padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .card:hover { border-color: var(--primary); }
+        .card i { font-size: 24px; color: var(--primary); margin-bottom: 8px; }
         #results { max-width: 600px; margin: auto; padding: 15px; }
-        .result-item { background: white; padding: 15px; border-radius: 12px; border-right: 5px solid var(--secondary); margin-bottom: 10px; }
-        .voice-active { color: var(--secondary); animation: pulse 1s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .result-item { background: white; padding: 20px; border-radius: 15px; border-right: 6px solid var(--secondary); margin-bottom: 15px; }
+        .form-panel { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none; margin-top: 15px; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-action { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>حقي (Haqi Maroc)</h2>
-        <p>المنصة الذكية للقطاعات السيادية</p>
-    </div>
+    <div class="header"><h2>حقي (Haqi Maroc)</h2><p>بوابتك الذكية للوثائق الإدارية</p></div>
     <div class="search-container">
         <div class="search-box">
-            <input type="text" id="query" placeholder="تحدث أو اكتب ما تبحث عنه...">
-            <button class="btn-voice" id="voice-btn"><i class="fas fa-microphone"></i></button>
-            <button class="btn-search" onclick="search()">بحث</button>
+            <input type="text" id="query" placeholder="ابحث عن: طلب، التزام، شكاية...">
+            <button onclick="search()" style="background:none; border:none; cursor:pointer;"><i class="fas fa-search"></i></button>
         </div>
     </div>
     <div class="cards-grid" id="quick-cards"></div>
     <div id="results"></div>
+
+    <div id="editor-panel" class="form-panel">
+        <h3 id="doc-title" style="color:var(--primary)"></h3>
+        <input type="text" id="user-name" placeholder="الاسم الكامل">
+        <input type="text" id="user-city" placeholder="المدينة">
+        <textarea id="user-details" rows="4" placeholder="تفاصيل إضافية (مثلاً: رقم المباراة أو غرض الالتزام)"></textarea>
+        <button class="btn-action" onclick="generateDocument()">توليد الوثيقة الآن</button>
+        <div id="final-doc" style="margin-top:20px; padding:15px; background:#f9f9f9; border:1px dashed #ccc; display:none; white-space: pre-wrap;"></div>
+    </div>
 
     <script>
         async function loadCards() {
@@ -57,27 +62,37 @@
             });
             const data = await res.json();
             const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = data.found ? data.results.map(r => `
-                <div class="result-item"><h4>${r.title}</h4><p>${r.content}</p></div>`).join('') 
-                : '<div class="result-item">لم نجد نتائج. جرب (شكاية، دعم، التزام).</div>';
+            if (data.found) {
+                resultsDiv.innerHTML = data.results.map(r => `
+                    <div class="result-item" onclick="openEditor('${r.title}')">
+                        <h4>${r.title}</h4>
+                        <p>${r.content}</p>
+                        <small style="color:var(--primary)">انقر هنا لفتح المحرر ✍️</small>
+                    </div>`).join('');
+            }
         }
 
-        function quickSearch(term) { document.getElementById('query').value = term; search(); }
-
-        // برمجة الميكروفون
-        const voiceBtn = document.getElementById('voice-btn');
-        if ('webkitSpeechRecognition' in window) {
-            const recognition = new webkitSpeechRecognition();
-            recognition.lang = 'ar-MA';
-            voiceBtn.onclick = () => { recognition.start(); voiceBtn.classList.add('voice-active'); };
-            recognition.onresult = (e) => {
-                document.getElementById('query').value = e.results[0][0].transcript;
-                search();
-            };
-            recognition.onend = () => voiceBtn.classList.remove('voice-active');
-        } else {
-            voiceBtn.style.display = 'none';
+        function openEditor(title) {
+            document.getElementById('editor-panel').style.display = 'block';
+            document.getElementById('doc-title').innerText = title;
+            document.getElementById('results').style.display = 'none';
+            window.scrollTo(0, document.body.scrollHeight);
         }
+
+        function generateDocument() {
+            const name = document.getElementById('user-name').value;
+            const city = document.getElementById('user-city').value;
+            const title = document.getElementById('doc-title').innerText;
+            const details = document.getElementById('user-details').value;
+            
+            let text = `إلى السيد الإداري المحترم،\nأنا الموقع أسفله السيد ${name} القاطن بمدينة ${city}...\nبخصوص ${title}: ${details}\nالتوقيع: __________`;
+            
+            const docDiv = document.getElementById('final-doc');
+            docDiv.innerText = text;
+            docDiv.style.display = 'block';
+        }
+
+        function quickSearch(t) { document.getElementById('query').value = t; search(); }
         loadCards();
     </script>
 </body>
