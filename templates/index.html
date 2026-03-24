@@ -3,42 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>بوابة حقي السيادية 🇲🇦</title>
+    <title>بوابة حقي - محرك العدالة 🇲🇦</title>
+    <style>
+        body { background: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; text-align: center; }
+        .header { background: linear-gradient(45deg, #1e5631, #c1272d); padding: 30px; border-bottom: 4px solid #daa520; }
+        .btn-main { width: 90%; padding: 20px; margin: 20px 0; background: #daa520; color: #000; font-weight: bold; border: none; border-radius: 12px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(218,165,32,0.3); }
+        .portal-box { display: none; background: #111; margin: 15px; padding: 20px; border: 1px solid #daa520; border-radius: 15px; }
+        textarea { width: 100%; height: 120px; background: #000; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        .share-unit { display: none; margin-top: 20px; }
+        .btn-share { width: 48%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+        .whatsapp { background: #25D366; color: white; }
+        .sms { background: #007bff; color: white; }
+    </style>
 </head>
-<body style="background: #000; color: white; font-family: sans-serif;">
-    <div class="header" style="background: linear-gradient(to right, #1e5631, #c1272d); padding: 20px; text-align: center; border-bottom: 3px solid #daa520;">
-        <h1 style="color: #daa520; margin: 0;">🇲🇦 بوابة حقي السيادية</h1>
-        <p style="font-size: 12px;">نظام الدفاع الرقمي عن حقوق المواطن</p>
+<body>
+    <div class="header">
+        <h1 style="margin:0;">🛡️ بوابة حقي السيادية</h1>
+        <p>لا ضياع للحقوق مع التوثيق الرقمي</p>
     </div>
 
-    <div id="main-ui" style="padding: 20px;">
-        <button onclick="startJustice()" style="width:100%; padding:25px; background:linear-gradient(45deg, #daa520, #8a6d3b); border:none; border-radius:15px; font-weight:bold; font-size:18px; cursor:pointer; box-shadow: 0 0 20px rgba(218,165,32,0.4);">🛡️ ابدأ محرك العدالة (رفع تظلم)</button>
+    <button class="btn-main" onclick="showPortal()">⚖️ صياغة شكاية (محرك العدالة)</button>
+
+    <div id="portal" class="portal-box">
+        <h3 style="color:#daa520;">وثّق تظلمك الآن</h3>
+        <textarea id="caseText" placeholder="اكتب تفاصيل ما حدث معك بوضوح..."></textarea>
         
-        <div id="justice-portal" style="display:none; margin-top:20px; background:#111; padding:20px; border:1px solid #daa520; border-radius:15px;">
-            <h3 style="color:#daa520;">⚖️ صياغة شكاية قانونية مدعمة بـ GPS</h3>
-            <textarea id="case" placeholder="اكتب هنا تفاصيل الحكرة أو الظلم..." style="width:100%; height:120px; background:#000; color:white; border:1px solid #333; padding:10px; border-radius:8px;"></textarea>
-            <div id="gps-stat" style="margin:10px 0; font-size:12px; color:#aaa;">📍 الموقع: لم يحدد بعد</div>
-            <button onclick="getGPS()" style="width:100%; padding:10px; background:#1e5631; color:white; border:none; border-radius:8px; margin-bottom:10px;">🌍 توثيق المكان (GPS)</button>
-            <button onclick="generate()" style="width:100%; padding:15px; background:#c1272d; color:white; font-weight:bold; border:none; border-radius:10px;">توليد الوثيقة القانونية</button>
-            <div id="result" style="display:none; margin-top:20px; padding:15px; background:#fff; color:#000; font-family:serif; border-radius:5px; white-space:pre-wrap;"></div>
+        <div id="gps-info" style="font-size:12px; color:#888; margin-bottom:10px;">📍 الموقع الجغرافي: غير محدد</div>
+        <button onclick="getGPS()" style="background:#1e5631; color:white; width:100%; padding:10px; border:none; border-radius:5px; cursor:pointer;">🌍 تثبيت الموقع (GPS)</button>
+        
+        <button onclick="generateDoc()" style="background:#c1272d; color:white; width:100%; padding:15px; border:none; border-radius:10px; margin-top:10px; font-weight:bold;">توليد الشكاية القانونية</button>
+
+        <div id="finalDoc" style="display:none; background:white; color:black; padding:15px; margin-top:20px; text-align:right; border-radius:5px; font-family:serif; white-space:pre-wrap;"></div>
+
+        <div id="shareSection" class="share-unit">
+            <p style="color:#daa520;">📢 انشر تظلمك للجهات الحقوقية:</p>
+            <button class="btn-share whatsapp" onclick="shareWA()">WhatsApp</button>
+            <button class="btn-share sms" onclick="shareSMS()">SMS</button>
         </div>
     </div>
 
     <script>
-        let coords = "غير محدد";
-        function startJustice() { document.getElementById('justice-portal').style.display = 'block'; }
+        let myCoords = "لم يتم التحديد";
+        function showPortal() { document.getElementById('portal').style.display = 'block'; }
+        
         function getGPS() {
             navigator.geolocation.getCurrentPosition(p => {
-                coords = `خط عرض: ${p.coords.latitude}, خط طول: ${p.coords.longitude}`;
-                document.getElementById('gps-stat').innerText = "✅ تم توثيق الموقع: " + coords;
+                myCoords = `${p.coords.latitude}, ${p.coords.longitude}`;
+                document.getElementById('gps-info').innerText = "✅ تم التوثيق: " + myCoords;
             });
         }
-        function generate() {
-            const r = document.getElementById('result');
-            r.style.display = 'block';
-            r.innerText = `إلى السيد وكيل الملك \nالموضوع: شكاية تظلم رقمية \n\nأنا الموقع أسفله... أبلغ عن واقعة: ${document.getElementById('case').value}\n\nتوثيق الموقع (GPS): ${coords}\nالتاريخ: ${new Date().toLocaleString()}`;
+
+        function generateDoc() {
+            const text = document.getElementById('caseText').value;
+            const doc = `إلى السيد وكيل الملك المحترم\nشكاية تظلم رسمية\n\nأبلغكم عن الواقعة التالية: ${text}\n\nموقع الحادث (GPS): ${myCoords}\nالتاريخ: ${new Date().toLocaleString()}\n\nحرر عبر بوابة حقي السيادية.`;
+            document.getElementById('finalDoc').innerText = doc;
+            document.getElementById('finalDoc').style.display = 'block';
+            document.getElementById('shareSection').style.display = 'flex';
+            document.getElementById('shareSection').style.justifyContent = 'space-between';
+        }
+
+        function shareWA() {
+            const msg = encodeURIComponent(document.getElementById('finalDoc').innerText);
+            window.open(`https://wa.me/?text=${msg}`);
+        }
+
+        function shareSMS() {
+            const msg = encodeURIComponent(document.getElementById('finalDoc').innerText);
+            window.location.href = `sms:?body=${msg}`;
         }
     </script>
 </body>
