@@ -1,0 +1,16 @@
+:root { --gold: #daa520; --bg: #050505; }
+body { background: var(--bg); color: white; direction: rtl; font-family: 'Amiri', serif; margin: 0; }
+.header { 
+    background: linear-gradient(to bottom, #1e5631, #c1272d); 
+    padding: 40px 10px; text-align: center; border-bottom: 3px solid var(--gold);
+}
+.cards-grid { 
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; 
+}
+.card { 
+    background: #111; border: 1px solid #333; border-radius: 15px; 
+    padding: 25px 10px; text-align: center; transition: 0.3s;
+}
+.card:hover { border-color: var(--gold); transform: translateY(-5px); }
+.card i { font-size: 30px; color: var(--gold); margin-bottom: 10px; }
+.btn-action { background: var(--gold); color: black; border-radius: 10px; border: none; font-weight: bold; }
