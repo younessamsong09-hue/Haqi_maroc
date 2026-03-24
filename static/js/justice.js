@@ -41,3 +41,20 @@ function generateComplaint() {
     res.innerText = `إلى السيد: وكيل الملك لدى المحكمة الابتدائية \nالموضوع: شكاية بتظلم معززة بالتوثيق الرقمي \n\nسلام تام بوجود مولانا الإمام،\nأنا الموقع أسفله... أحيطكم علماً بأنني تعرضت لـ: (${desc}).\n\nتاريخ الواقعة: ${new Date().toLocaleString()}\nالإحداثيات الجغرافية (GPS): ${userCoords}\n\nوحيث أن هذا الفعل يضرب في عمق دولة الحق والقانون، ألتمس منكم التدخل لإنصافي.\n\nتوقيع صاحب الحق: ....................\n(تم التوليد عبر بوابة حقي السيادية)`;
     res.scrollTop = 0;
 }
+
+async function searchLaw() {
+    const query = document.getElementById('law-search').value.toLowerCase();
+    const resDiv = document.getElementById('law-result');
+    if(query.length < 2) { resDiv.innerHTML = ""; return; }
+
+    const response = await fetch('/static/data/laws.json');
+    const laws = await response.json();
+    
+    const found = laws.find(l => l.keyword.includes(query) || l.content.includes(query));
+    
+    if(found) {
+        resDiv.innerHTML = `<b style="color:#daa520;">${found.title}:</b><br>${found.content}`;
+    } else {
+        resDiv.innerHTML = "❌ لم يتم العثور على نص قانوني مباشر. جرب كلمات أخرى.";
+    }
+}
