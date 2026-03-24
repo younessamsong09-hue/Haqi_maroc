@@ -47,3 +47,7 @@ body { background: var(--bg); color: white; direction: rtl; font-family: 'Amiri'
 .chat-messages { flex: 1; padding: 10px; overflow-y: auto; color: white; font-size: 14px; }
 .chat-input { padding: 10px; border-top: 1px solid #333; display: flex; }
 .chat-input input { flex: 1; background: #000; border: 1px solid #daa520; color: white; padding: 5px; border-radius: 5px; }
+/* نظام التقييم بالنجوم */
+.rating-system { text-align: center; margin-top: 20px; padding: 15px; background: #111; border-radius: 10px; border: 1px solid #daa520; }
+.stars { color: #888; font-size: 25px; cursor: pointer; }
+.stars .active { color: #daa520; }

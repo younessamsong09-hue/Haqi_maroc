@@ -22,3 +22,11 @@ function sendMsg() {
         box.scrollTop = box.scrollHeight;
     }, 1000);
 }
+function rate(n) {
+    const stars = document.querySelectorAll('.stars i');
+    const msg = document.getElementById('rate-msg');
+    stars.forEach((s, i) => {
+        s.classList.toggle('active', i < n);
+    });
+    msg.innerText = "شكراً لتقييمك! صوتك يساعد في تطوير خدمات تاوريرت.";
+}
