@@ -4,52 +4,53 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-# وظيفة ذكية لجلب البيانات من كافة قطاعات مجلد national
 def load_all_services():
     services = []
     base_path = os.path.join(app.root_path, 'national')
     if os.path.exists(base_path):
         for file in os.listdir(base_path):
-            # نتجاهل الملفات غير الأساسية ونركز على ملفات القطاعات
+            # نتجاهل ملف البطاقات السريعة ونركز على ملفات البيانات
             if file.endswith(".json") and file != "quick_cards.json":
-                with open(os.path.join(base_path, file), 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    services.extend(data if isinstance(data, list) else [data])
-    return services
+                try:
+                    with open(os.path.join(base_path, file), 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                        if isinstance(data, list):
+                            services.extend(data)
+                        else:
+                            services.append(data)
+                except Exception as e:
+                    print(f"Error loading {file}: {e}")
+    return services # تأكد أنها في هذا المستوى (خارج الـ for)
 
-# 1. الصفحة الرئيسية (الواجهة)
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# 2. صفحة محرر الشكايات القانونية
 @app.route('/generator')
 def generator():
     return render_template('generator.html')
 
-# 3. صفحة حاسبة الرسوم المالية
 @app.route('/finance')
 def finance():
     return render_template('finance.html')
 
-# 4. محرك البحث الذكي (API)
 @app.route('/ask', methods=['POST'])
 def ask():
     user_query = request.json.get('prompt', '').lower()
     all_data = load_all_services()
     
-    # البحث عن كلمات مفتاحية مطابقة
-    matches = [
-        item for item in all_data 
-        if any(key in user_query for key in item.get('keywords', '').split(','))
-    ]
+    matches = []
+    for item in all_data:
+        # البحث في الكلمات المفتاحية keywords
+        keywords = item.get('keywords', '').lower().split(',')
+        if any(key.strip() in user_query for key in keywords):
+            matches.append(item)
     
     return jsonify({
         "found": len(matches) > 0,
         "results": matches
     })
 
-# 5. جلب البطاقات السريعة للواجهة
 @app.route('/get_cards')
 def get_cards():
     path = os.path.join(app.root_path, 'national', 'quick_cards.json')
