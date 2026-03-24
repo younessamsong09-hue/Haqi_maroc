@@ -10,6 +10,7 @@ function openEditor(term) {
     if (term === 'طلب') { scriptFile = 'requests.js'; renderFunc = 'renderRequestEditor'; }
     else if (term === 'حكرة') { scriptFile = 'hokra.js'; renderFunc = 'renderHokraEditor'; }
     else if (term === 'صحة') { scriptFile = 'health.js'; renderFunc = 'renderHealth'; }
+    else if (term === 'رخصة') { scriptFile = 'business.js'; renderFunc = 'renderBusinessEditor'; }
     else if (term === 'مالية') { scriptFile = 'finance.js'; renderFunc = 'renderFinance'; }
 
     if (scriptFile) {
