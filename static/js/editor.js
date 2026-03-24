@@ -1,17 +1,16 @@
-function openEditor(term) {
+async function openEditor(type) {
     const area = document.getElementById('editor-area');
     document.getElementById('quick-cards').style.display = 'none';
-    area.style.display = 'block';
-
-    if (term === 'طلب') {
-        renderRequestEditor(area);
-    } else if (term === 'حكرة') {
-        // استدعاء ملف الحكرة ديناميكياً
-        const script = document.createElement('script');
-        script.src = '/static/js/sections/hokra.js';
-        script.onload = () => renderHokraEditor(area);
-        document.body.appendChild(script);
-    } else {
-        area.innerHTML = '<div class="result-item">هذا القسم سيتم ربطه بملفه المستقل قريباً.</div>';
+    
+    let module;
+    if (type === 'طلب') {
+        module = await import('./modules/requests.js');
+    } else if (type === 'حكرة') {
+        module = await import('./modules/legal.js');
+    }
+    
+    if (module) {
+        area.innerHTML = module.render();
+        area.style.display = 'block';
     }
 }
