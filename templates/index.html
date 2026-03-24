@@ -16,6 +16,9 @@
     <div style="padding: 0 20px 20px 20px;"> 
         <input type="text" id="main-search" onkeyup="smartSearch()" placeholder="بحث سريع عن وثيقة، قانون، أو خدمة..." style="width:100%; padding:15px; background:#111; border:2px solid #daa520; border-radius:30px; color:white; font-family:inherit; text-align:center; outline:none;"> 
     </div>
+    <div style="padding: 20px; text-align: center;"> 
+        <button onclick="openJusticePortal()" style="width:100%; padding:20px; background:linear-gradient(45deg, #c1272d, #1e5631); color:white; font-weight:bold; border:2px solid #daa520; border-radius:15px; font-size:18px; box-shadow: 0 0 15px #daa520; cursor:pointer;">🛡️ رفع تظلم قانوني (محرك العدالة)</button> 
+    </div>
     <div id="quick-cards" class="cards-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px;">
         <div class="card" onclick="forceOpen('legal')" style="background: #111; border: 1px solid #daa520; border-radius: 15px; padding: 20px; text-align: center;">
             <i class="fas fa-gavel" style="color: #daa520; font-size: 30px;"></i>
@@ -74,5 +77,6 @@
         </div> 
     </div>
 <script src="/static/js/chat.js"></script>
+<script src="/static/js/justice.js"></script>
 </body>
 </html>
