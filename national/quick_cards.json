@@ -1,6 +1,6 @@
 [
-  {"title": "تبليغ عن رشوة", "icon": "fa-gavel", "search_term": "رشوة"},
-  {"title": "تعويض الدواء", "icon": "fa-pills", "search_term": "دواء"},
-  {"title": "الحماية من الحكرة", "icon": "fa-user-shield", "search_term": "حكرة"},
-  {"title": "الدعم المباشر", "icon": "fa-wallet", "search_term": "دعم"}
+  {"title": "تبليغ عن رشوة", "icon": "fa-handshake-slash", "search_term": "رشوة"},
+  {"title": "تعويض الدواء", "icon": "fa-first-aid", "search_term": "دواء"},
+  {"title": "الحماية من الحكرة", "icon": "fa-shield-halved", "search_term": "حكرة"},
+  {"title": "أرقام الاستغاثة", "icon": "fa-phone-volume", "search_term": "طوارئ"}
 ]

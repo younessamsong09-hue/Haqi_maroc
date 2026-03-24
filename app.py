@@ -20,15 +20,22 @@ def load_data():
 @app.route('/')
 def index(): return render_template('index.html')
 
-@app.route('/get_cards'):
+@app.route('/get_cards')
 def get_cards():
     p = os.path.join(DATA_DIR, 'quick_cards.json')
-    return jsonify(json.load(open(p, 'r', encoding='utf-8'))) if os.path.exists(p) else jsonify([])
+    if os.path.exists(p):
+        with open(p, 'r', encoding='utf-8') as f: return jsonify(json.load(f))
+    return jsonify([])
 
 @app.route('/ask', methods=['POST'])
 def ask():
-    q = request.json.get('prompt', '').lower()
+    q = request.json.get('prompt', '').lower().strip()
+    if not q: return jsonify({"found": False, "results": []})
+    
     all_data = load_data()
-    # بحث ذكي يبحث في العناوين والكلمات المفتاحية
+    # بحث ذكي يبحث في الكلمات المفتاحية والعناوين
     matches = [i for i in all_data if q in i.get('title','').lower() or any(q in k for k in i.get('keywords','').split(','))]
     return jsonify({"found": len(matches) > 0, "results": matches})
+
+if __name__ == "__main__":
+    app.run()
