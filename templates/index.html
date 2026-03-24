@@ -3,79 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة حقي - محرك العدالة 🇲🇦</title>
+    <title>بوابة حقي السيادية 🇲🇦</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; text-align: center; }
-        .header { background: linear-gradient(45deg, #1e5631, #c1272d); padding: 30px; border-bottom: 4px solid #daa520; }
-        .btn-main { width: 90%; padding: 20px; margin: 20px 0; background: #daa520; color: #000; font-weight: bold; border: none; border-radius: 12px; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(218,165,32,0.3); }
-        .portal-box { display: none; background: #111; margin: 15px; padding: 20px; border: 1px solid #daa520; border-radius: 15px; }
-        textarea { width: 100%; height: 120px; background: #000; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
-        .share-unit { display: none; margin-top: 20px; }
-        .btn-share { width: 48%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
-        .whatsapp { background: #25D366; color: white; }
-        .sms { background: #007bff; color: white; }
+        body { background: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 50px; }
+        .header { background: linear-gradient(45deg, #1e5631, #c1272d); padding: 25px; border-bottom: 3px solid #daa520; text-align: center; }
+        
+        /* قسم البحث */
+        .search-section { padding: 20px; }
+        #main-search { width: 100%; padding: 15px; background: #111; border: 2px solid #daa520; border-radius: 30px; color: white; text-align: center; outline: none; }
+
+        /* البطاقات الرئيسية */
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        .card { background: #111; border: 1px solid #333; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: #daa520; transform: translateY(-5px); }
+        .card i { font-size: 24px; color: #daa520; margin-bottom: 10px; display: block; }
+
+        /* أقسام الأدوات */
+        .tool-section { display: none; margin: 20px; padding: 20px; background: #0a0a0a; border: 1px solid #daa520; border-radius: 15px; }
+        textarea { width: 100%; height: 100px; background: #000; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 8px; margin: 10px 0; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-gold { background: #daa520; color: #000; }
+        .btn-green { background: #1e5631; color: #fff; }
+        .btn-red { background: #c1272d; color: #fff; }
+
+        #final-doc { background: white; color: black; padding: 15px; margin-top: 15px; border-radius: 5px; white-space: pre-wrap; display: none; text-align: right; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1 style="margin:0;">🛡️ بوابة حقي السيادية</h1>
-        <p>لا ضياع للحقوق مع التوثيق الرقمي</p>
+
+<div class="header">
+    <h1 style="margin:0;">🛡️ بوابة حقي السيادية</h1>
+    <p style="font-size:12px; color:#ddd;">نظام الدفاع الرقمي - تاوريرت 2026</p>
+</div>
+
+<div class="search-section">
+    <input type="text" id="main-search" onkeyup="smartSearch()" placeholder="ابحث عن خدمة أو نص قانوني...">
+</div>
+
+<div id="main-grid" class="grid-container">
+    <div class="card" onclick="openTool('justice-tool')">
+        <i class="fas fa-gavel"></i>
+        <span>محرك العدالة</span>
     </div>
-
-    <button class="btn-main" onclick="showPortal()">⚖️ صياغة شكاية (محرك العدالة)</button>
-
-    <div style="margin: 20px; padding: 20px; background: #111; border: 1px solid #daa520; border-radius: 15px;"> 
-        <h3 style="color:#daa520;">🔍 رادار القوانين المغربية 2026</h3> 
-        <input type="text" id="law-search" onkeyup="searchLaw()" placeholder="اكتب كلمة (رشوة، نصب، عقار)..." style="width:100%; padding:12px; background:#000; color:white; border:1px solid #daa520; border-radius:8px;"> 
-        <div id="law-result" style="margin-top:15px; text-align:right; font-size:14px; color:#ccc;"></div> 
+    <div class="card" onclick="openTool('law-tool')">
+        <i class="fas fa-book-maritime"></i>
+        <span>رادار القوانين</span>
     </div>
-    <div id="portal" class="portal-box">
-        <h3 style="color:#daa520;">وثّق تظلمك الآن</h3>
-        <textarea id="caseText" placeholder="اكتب تفاصيل ما حدث معك بوضوح..."></textarea>
-        
-        <div id="gps-info" style="font-size:12px; color:#888; margin-bottom:10px;">📍 الموقع الجغرافي: غير محدد</div>
-        <button onclick="getGPS()" style="background:#1e5631; color:white; width:100%; padding:10px; border:none; border-radius:5px; cursor:pointer;">🌍 تثبيت الموقع (GPS)</button>
-        
-        <button onclick="generateDoc()" style="background:#c1272d; color:white; width:100%; padding:15px; border:none; border-radius:10px; margin-top:10px; font-weight:bold;">توليد الشكاية القانونية</button>
-
-        <div id="finalDoc" style="display:none; background:white; color:black; padding:15px; margin-top:20px; text-align:right; border-radius:5px; font-family:serif; white-space:pre-wrap;"></div>
-
-        <div id="shareSection" class="share-unit">
-            <p style="color:#daa520;">📢 انشر تظلمك للجهات الحقوقية:</p>
-            <button class="btn-share whatsapp" onclick="shareWA()">WhatsApp</button>
-            <button class="btn-share sms" onclick="shareSMS()">SMS</button>
-        </div>
+    <div class="card" onclick="alert('قريباً: المحفظة الرقمية')">
+        <i class="fas fa-wallet"></i>
+        <span>الحقيبة الرقمية</span>
     </div>
+    <div class="card" onclick="alert('قريباً: الرعاية الفائقة')">
+        <i class="fas fa-heartbeat"></i>
+        <span>الرعاية الفائقة</span>
+    </div>
+</div>
 
-    <script>
-        let myCoords = "لم يتم التحديد";
-        function showPortal() { document.getElementById('portal').style.display = 'block'; }
-        
-        function getGPS() {
-            navigator.geolocation.getCurrentPosition(p => {
-                myCoords = `${p.coords.latitude}, ${p.coords.longitude}`;
-                document.getElementById('gps-info').innerText = "✅ تم التوثيق: " + myCoords;
-            });
-        }
+<div id="justice-tool" class="tool-section">
+    <h3 style="color:#daa520;">⚖️ صياغة شكاية مدعمة بـ GPS</h3>
+    <textarea id="case-desc" placeholder="صف واقعة الظلم هنا..."></textarea>
+    <div id="gps-info" style="font-size:11px; color:#888;">📍 الموقع: لم يحدد</div>
+    <button class="btn btn-green" onclick="getGPS()">🌍 تثبيت الموقع الجغرافي</button>
+    <button class="btn btn-gold" onclick="generateComplaint()">توليد الوثيقة الرسمية</button>
+    <div id="final-doc"></div>
+    <button class="btn" style="background:#333; color:white;" onclick="closeTools()">🏠 العودة</button>
+</div>
 
-        function generateDoc() {
-            const text = document.getElementById('caseText').value;
-            const doc = `إلى السيد وكيل الملك المحترم\nشكاية تظلم رسمية\n\nأبلغكم عن الواقعة التالية: ${text}\n\nموقع الحادث (GPS): ${myCoords}\nالتاريخ: ${new Date().toLocaleString()}\n\nحرر عبر بوابة حقي السيادية.`;
-            document.getElementById('finalDoc').innerText = doc;
-            document.getElementById('finalDoc').style.display = 'block';
-            document.getElementById('shareSection').style.display = 'flex';
-            document.getElementById('shareSection').style.justifyContent = 'space-between';
-        }
+<div id="law-tool" class="tool-section">
+    <h3 style="color:#daa520;">🔍 البحث القانوني السريع</h3>
+    <input type="text" id="law-input" onkeyup="internalLawSearch()" placeholder="اكتب (رشوة، نصب، عقار)..." style="width:100%; padding:10px; background:#000; border:1px solid #daa520; color:white;">
+    <div id="law-res" style="margin-top:15px; font-size:14px; color:#ccc;"></div>
+    <button class="btn" style="background:#333; color:white; margin-top:10px;" onclick="closeTools()">🏠 العودة</button>
+</div>
 
-        function shareWA() {
-            const msg = encodeURIComponent(document.getElementById('finalDoc').innerText);
-            window.open(`https://wa.me/?text=${msg}`);
-        }
+<script>
+    function openTool(id) {
+        document.getElementById('main-grid').style.display = 'none';
+        document.querySelectorAll('.tool-section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
 
-        function shareSMS() {
-            const msg = encodeURIComponent(document.getElementById('finalDoc').innerText);
-            window.location.href = `sms:?body=${msg}`;
-        }
-    </script>
+    function closeTools() {
+        document.getElementById('main-grid').style.display = 'grid';
+        document.querySelectorAll('.tool-section').forEach(s => s.style.display = 'none');
+    }
+
+    let coords = "غير محدد";
+    function getGPS() {
+        navigator.geolocation.getCurrentPosition(p => {
+            coords = `${p.coords.latitude}, ${p.coords.longitude}`;
+            document.getElementById('gps-info').innerText = "✅ تم التوثيق: " + coords;
+        });
+    }
+
+    function generateComplaint() {
+        const text = document.getElementById('case-desc').value;
+        const doc = document.getElementById('final-doc');
+        doc.innerText = `إلى السيد وكيل الملك \nشكاية تظلم رقمية \n\nالواقعة: ${text}\n\nGPS: ${coords}\nالتاريخ: ${new Date().toLocaleString()}`;
+        doc.style.display = 'block';
+    }
+
+    function smartSearch() {
+        let input = document.getElementById('main-search').value.toLowerCase();
+        let cards = document.querySelectorAll('.card');
+        cards.forEach(c => {
+            c.style.display = c.innerText.toLowerCase().includes(input) ? "block" : "none";
+        });
+    }
+
+    async function internalLawSearch() {
+        const q = document.getElementById('law-input').value.toLowerCase();
+        const res = document.getElementById('law-res');
+        if(q.length < 2) return;
+        const response = await fetch('/static/data/laws.json');
+        const laws = await response.json();
+        const found = laws.find(l => l.keyword.includes(q) || l.content.includes(q));
+        res.innerHTML = found ? `<b style="color:#daa520;">${found.title}:</b><br>${found.content}` : "❌ لا يوجد نص مباشر.";
+    }
+</script>
 </body>
 </html>
