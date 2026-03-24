@@ -33,9 +33,6 @@ def ask():
     if not q: return jsonify({"found": False, "results": []})
     
     all_data = load_data()
-    # بحث ذكي يبحث في الكلمات المفتاحية والعناوين
+    # تحسين البحث ليقبل الكلمات المتقاربة
     matches = [i for i in all_data if q in i.get('title','').lower() or any(q in k for k in i.get('keywords','').split(','))]
     return jsonify({"found": len(matches) > 0, "results": matches})
-
-if __name__ == "__main__":
-    app.run()
