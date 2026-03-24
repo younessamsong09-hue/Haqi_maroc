@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, jsonify
 import os
 
 app = Flask(__name__, 
@@ -9,14 +9,9 @@ app = Flask(__name__,
 def index():
     return render_template('index.html')
 
-@app.route('/static/<path:path>')
-def send_static(path):
-    return send_from_directory('static', path)
-
-# إضافة مسار لجلب الأخبار لضمان عدم تعطل الشريط
 @app.route('/get_news')
 def get_news():
-    return {"news": "🔔 مستجدات 2026: تحديث الخدمات الرقمية بجهة الشرق | 🛂 تبسيط مساطر الجواز | ⚖️ منصة الشكايات الموحدة"}
+    return jsonify({"news": "🔔 بوابة حقي: جاري تحديث الأنباء السيادية لعام 2026... | 🇲🇦 خدمة المواطن أولويتنا"})
 
 if __name__ == '__main__':
     app.run(debug=True)
