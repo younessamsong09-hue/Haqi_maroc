@@ -1,13 +1,25 @@
 window.renderSection = (area) => {
     area.innerHTML = `
-        <div class="result-item" style="border-right: 8px solid #0056b3; background: #0a0a0a; color: white;">
-            <h3 style="color:#0056b3;">📂 الحقيبة الرقمية للوثائق</h3>
-            <ul style="list-style:none; padding:0;">
-                <li onclick="alert('المتطلبات: صور، 75درهم تمبر، شهادة السكنى')" style="padding:15px; background:#111; margin-bottom:5px; border-radius:8px;">🆔 البطاقة الوطنية (CNIE)</li>
-                <li onclick="alert('المتطلبات: حجز موعد، 500درهم، نسخة الحالة المدنية')" style="padding:15px; background:#111; margin-bottom:5px; border-radius:8px;">🛂 جواز السفر المغربي</li>
-                <li onclick="alert('المتطلبات: عقد كراء أو وصل كهرباء + حضور الشخص')" style="padding:15px; background:#111; margin-bottom:5px; border-radius:8px;">🏠 شهادة السكنى</li>
-            </ul>
-            <button onclick="location.reload()" style="width:100%; margin-top:10px; color:#0056b3; background:none; border:none;">الرجوع</button>
-        </div>
-    `;
+        <div class="result-item" style="border-right: 5px solid #daa520; background: #111; color: white; padding: 15px;">
+            <h3 style="color:#daa520;">📂 الحقيبة الرقمية الشاملة</h3>
+            <p>اختر الوثيقة لمعرفة المطلوب بدقة:</p>
+            <select id="doc-select" onchange="showDoc()" style="width:100%; padding:10px; background:#000; color:#daa520; border:1px solid #daa520;">
+                <option value="">-- اختر الوثيقة --</option>
+                <option value="id">البطاقة الوطنية CNIE</option>
+                <option value="pass">جواز السفر</option>
+                <option value="res">شهادة السكنى</option>
+            </select>
+            <div id="doc-res" style="margin-top:15px; padding:10px; border-radius:5px;"></div>
+            <button onclick="location.reload()" style="width:100%; margin-top:15px; background:none; border:none; color:#666;">🏠 رجوع</button>
+        </div>`;
 };
+function showDoc() {
+    const v = document.getElementById('doc-select').value;
+    const r = document.getElementById('doc-res');
+    const m = {
+        'id': "🆔 **المطلوب:** صور، 75درهم تمبر، شهادة السكنى (أو وصل الماء/الكهرباء).",
+        'pass': "🛂 **المطلوب:** حجز موعد، 500درهم تمبر إلكتروني، نسخة من البطاقة الوطنية.",
+        'res': "🏠 **المطلوب:** حضور الشخص، نسخة من عقد الكراء أو ملكية السكن."
+    };
+    r.innerHTML = m[v] || "";
+}
