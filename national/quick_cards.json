@@ -1,0 +1,35 @@
+[
+  {
+    "id": "card_corruption",
+    "title": "تبليغ عن رشوة",
+    "subtitle": "كشف الفساد الإداري",
+    "icon": "fas fa-handshake-slash",
+    "color_class": "bg-danger-alpha",
+    "search_term": "طلبوا مني رشوة"
+  },
+  {
+    "id": "card_health",
+    "title": "تعويض الدواء",
+    "subtitle": "حساب مستحقات AMO",
+    "icon": "fas fa-pills",
+    "color_class": "bg-success-alpha",
+    "search_term": "تعويض دواء"
+  },
+  {
+    "id": "card_rights",
+    "title": "الحماية من الحكرة",
+    "subtitle": "قانون الشطط في السلطة",
+    "icon": "fas fa-gavel",
+    "color_class": "bg-warning-alpha",
+    "search_term": "إهانة من طرف موظف"
+  },
+  {
+    "id": "card_support",
+    "title": "الدعم المباشر",
+    "subtitle": "شروط منحة 500 درهم",
+    "icon": "fas fa-wallet",
+    "color_class": "bg-primary-alpha",
+    "search_term": "الدعم الاجتماعي المباشر"
+  }
+]
+
