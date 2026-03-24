@@ -3,31 +3,29 @@ from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-def load_all_services():
-    services = []
-    base_path = os.path.join(app.root_path, 'national')
-    if os.path.exists(base_path):
-        for file in os.listdir(base_path):
-            if file.endswith(".json") and file != "quick_cards.json":
-                try:
-                    with open(os.path.join(base_path, file), 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                        services.extend(data if isinstance(data, list) else [data])
-                except: continue
-    return services
+def load_data():
+    results = []
+    path = os.path.join(os.path.dirname(__file__), 'national')
+    if os.path.exists(path):
+        for f in os.listdir(path):
+            if f.endswith('.json') and f != 'quick_cards.json':
+                with open(os.path.join(path, f), 'r', encoding='utf-8') as file:
+                    data = json.load(file)
+                    results.extend(data if isinstance(data, list) else [data])
+    return results
 
 @app.route('/')
 def index(): return render_template('index.html')
 
 @app.route('/get_cards')
 def get_cards():
-    p = os.path.join(app.root_path, 'national', 'quick_cards.json')
-    return jsonify(json.load(open(p, 'r', encoding='utf-8'))) if os.path.exists(p) else jsonify([])
+    p = os.path.join(os.path.dirname(__file__), 'national', 'quick_cards.json')
+    if os.path.exists(p):
+        with open(p, 'r', encoding='utf-8') as f: return jsonify(json.load(f))
+    return jsonify([])
 
 @app.route('/ask', methods=['POST'])
 def ask():
     q = request.json.get('prompt', '').lower()
-    matches = [s for s in load_all_services() if any(k in q for k in s.get('keywords', '').split(','))]
+    matches = [i for i in load_data() if any(k in q for k in i.get('keywords','').split(','))]
     return jsonify({"found": len(matches) > 0, "results": matches})
-
-if __name__ == "__main__": app.run()
