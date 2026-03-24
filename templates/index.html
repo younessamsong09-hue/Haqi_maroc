@@ -3,79 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حقي (Haqi Maroc) - منصة كشف التجاوزات</title>
+    <title>Haqi Maroc - منصة الحقوق</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root { --main-green: #1a5e32; --alert-red: #c0392b; }
-        body { background: #f8faf9; font-family: 'Segoe UI', sans-serif; }
-        .hero { background: linear-gradient(135deg, var(--main-green), #2d8a4e); color: white; padding: 50px 0 80px; border-radius: 0 0 40px 40px; }
-        .search-container { margin-top: -40px; }
-        .search-box { background: white; border-radius: 35px; padding: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); border: 2px solid transparent; transition: 0.3s; }
-        .search-box:focus-within { border-color: var(--main-green); }
-        .search-input { border: none; padding: 12px 25px; width: 85%; outline: none; font-size: 1.1rem; }
-        .example-card { cursor: pointer; border-radius: 20px; transition: 0.3s; border: none; background: white; }
-        .example-card:hover { transform: translateY(-7px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
-        .result-item { border-radius: 20px; border: none; margin-bottom: 20px; border-right: 10px solid var(--main-green); }
-        .shield-mode { border-right-color: var(--alert-red); background: #fff8f8; }
+        body { background: #f4f7f6; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        .hero { background: linear-gradient(135deg, var(--main-green), #2d8a4e); color: white; padding: 40px 0; border-radius: 0 0 30px 30px; }
+        .search-box { margin-top: -30px; background: white; border-radius: 30px; padding: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .example-card { cursor: pointer; border-radius: 15px; transition: 0.3s; border: none; }
+        .example-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
 <div class="hero text-center">
-    <div class="container">
-        <h1 class="fw-bold"><i class="fas fa-balance-scale-left"></i> حقي (Haqi Maroc)</h1>
-        <p class="lead">المنصة الذكية لكشف التجاوزات ودعم الضعفاء قانونياً</p>
-    </div>
+    <h1 class="fw-bold">حقي (Haqi Maroc)</h1>
+    <p>منصة الدفاع عن الحقوق والخدمات القانونية</p>
 </div>
 
-<div class="container search-container">
+<div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-9">
-            <div class="search-box d-flex align-items-center">
-                <input type="text" id="user-query" class="search-input" placeholder="اكتب مشكلتك هنا.. (مثال: طلبوا مني رشوة)">
-                <button onclick="smartSearch()" class="btn btn-dark rounded-circle ms-auto p-3" style="width:55px; height:55px;"><i class="fas fa-search"></i></button>
+        <div class="col-md-8">
+            <div class="search-box d-flex">
+                <input type="text" id="user-query" class="form-control border-0 bg-transparent" placeholder="ما هي مشكلتك؟">
+                <button onclick="smartSearch()" class="btn btn-dark rounded-pill px-4">بحث</button>
             </div>
-            
-            <div id="quick-cards-area" class="row g-3 mt-4"></div>
+            <div id="quick-cards-area" class="row g-2 mt-4"></div>
         </div>
     </div>
-
     <div id="results-area" class="mt-5 pb-5"></div>
 </div>
 
 <script>
-// تحميل البطاقات عند فتح الموقع
+// 1. جلب البطاقات عند تشغيل الموقع
 window.onload = async function() {
-    try {
-        const response = await fetch('/get_cards');
-        const cards = await response.json();
-        const area = document.getElementById('quick-cards-area');
-        cards.forEach(card => {
-            area.innerHTML += `
-                <div class="col-6 col-md-3">
-                    <div class="card example-card h-100 shadow-sm p-3 text-center" onclick="fillSearch('${card.search_term}')">
-                        <div class="mb-2 text-dark" style="font-size: 1.8rem;"><i class="${card.icon}"></i></div>
-                        <h6 class="fw-bold mb-1">${card.title}</h6>
-                        <small class="text-muted">${card.subtitle}</small>
-                    </div>
-                </div>`;
-        });
-    } catch (e) { console.error("خطأ في تحميل البطاقات"); }
+    const res = await fetch('/get_cards');
+    const cards = await res.json();
+    const area = document.getElementById('quick-cards-area');
+    cards.forEach(card => {
+        area.innerHTML += `
+            <div class="col-6 col-md-3">
+                <div class="card example-card p-3 text-center shadow-sm" onclick="fillSearch('${card.search_term}')">
+                    <i class="${card.icon} mb-2 fa-lg text-success"></i>
+                    <h6 class="small fw-bold mb-0">${card.title}</h6>
+                </div>
+            </div>`;
+    });
 };
 
-function fillSearch(text) {
-    document.getElementById('user-query').value = text;
-    smartSearch();
-}
+function fillSearch(t) { document.getElementById('user-query').value = t; smartSearch(); }
 
+// 2. محرك البحث والربط مع الخدمات المنفصلة
 async function smartSearch() {
     const query = document.getElementById('user-query').value;
     const resArea = document.getElementById('results-area');
-    if(!query) return;
-
-    resArea.innerHTML = '<div class="text-center mt-5"><div class="spinner-border text-success"></div><p class="mt-2">جاري تحليل الحالة قانونياً...</p></div>';
+    resArea.innerHTML = '<div class="text-center"><div class="spinner-border text-success"></div></div>';
 
     const response = await fetch('/ask', {
         method: 'POST',
@@ -86,40 +70,32 @@ async function smartSearch() {
 
     resArea.innerHTML = '';
     if(data.found) {
-        data.results.forEach(item => {
+        data.results.forEach((item, index) => {
             const isShield = item.type === "shield_tool";
             resArea.innerHTML += `
-                <div class="card result-item shadow-sm p-4 ${isShield ? 'shield-mode' : ''}">
-                    <h3 class="${isShield ? 'text-danger' : 'text-success'} mb-3">${isShield ? '🛡️' : 'ℹ️'} ${item.title}</h3>
-                    <p class="fs-5">${item.docs}</p>
-                    ${item.law_article ? `<div class="alert alert-secondary"><b>السند القانوني:</b> ${item.law_article}</div>` : ''}
-                    ${isShield ? `
-                        <textarea id="story" class="form-control mb-3" rows="4" placeholder="اكتب تفاصيل ما حدث معك بوضوح هنا لإنشاء البلاغ..."></textarea>
-                        <button onclick="downloadPDF('${item.title}', '${item.law_article}')" class="btn btn-danger btn-lg w-100 shadow"><i class="fas fa-file-pdf"></i> تحميل البلاغ كملف PDF رسمي</button>
-                    ` : ''}
+                <div class="card shadow-sm p-4 mb-3" style="border-right: 8px solid ${isShield ? 'var(--alert-red)' : 'var(--main-green)'}">
+                    <h4 class="${isShield ? 'text-danger' : 'text-success'}">${item.title}</h4>
+                    <p>${item.docs}</p>
+                    ${item.phone ? `<a href="tel:${item.phone}" class="btn btn-outline-success mb-3"><i class="fas fa-phone"></i> اتصل الآن: ${item.phone}</a>` : ''}
+                    ${item.template ? `
+                        <div class="bg-light p-3 rounded">
+                            <h6>📝 مسودة البلاغ:</h6>
+                            <textarea id="txt-${index}" class="form-control mb-2" rows="3">${item.template}</textarea>
+                            <div class="d-flex gap-2">
+                                <button onclick="sendToWhatsApp('txt-${index}')" class="btn btn-primary w-50">واتساب</button>
+                                <button onclick="makePDF('txt-${index}', '${item.title}')" class="btn btn-danger w-50">PDF</button>
+                            </div>
+                        </div>` : ''}
                 </div>`;
         });
-    } else {
-        resArea.innerHTML = `<div class="alert alert-info text-center py-4 fs-5">${data.message}</div>`;
-    }
+    } else { resArea.innerHTML = '<div class="alert alert-warning text-center">لا توجد نتائج دقيقة.</div>'; }
 }
 
-function downloadPDF(title, law) {
-    const story = document.getElementById('story').value;
-    if(!story) { alert("من فضلك اكتب تفاصيل الواقعة أولاً ليتمكن النظام من صياغة البلاغ."); return; }
-    const element = document.createElement('div');
-    element.innerHTML = `
-        <div style="direction:rtl; font-family:Arial; padding:40px; border:2px solid #eee;">
-            <h1 style="color:#c0392b; text-align:center;">شكاية رسمية بخصوص: ${title}</h1>
-            <hr>
-            <p style="font-size:18px;"><b>بناءً على المقتضيات القانونية:</b> ${law}</p>
-            <div style="margin-top:30px; line-height:1.8; font-size:16px; border:1px dashed #ccc; padding:20px;">
-                <b>تفاصيل الوقائع كما صرح بها المشتكي:</b><br>${story}
-            </div>
-            <p style="margin-top:50px; text-align:left;"><b>حرر في:</b> ${new Date().toLocaleDateString('ar-MA')}</p>
-            <footer style="margin-top:100px; text-align:center; color:#888;">تم التوليد آلياً عبر منصة Haqi Maroc - للدفاع عن حقوق المواطن</footer>
-        </div>`;
-    html2pdf().from(element).set({margin: 1, filename: 'شكاية_رسمية.pdf', html2canvas: { scale: 2 }}).save();
+function sendToWhatsApp(id) { window.open(`https://wa.me/?text=${encodeURIComponent(document.getElementById(id).value)}`); }
+function makePDF(id, title) {
+    const el = document.createElement('div');
+    el.innerHTML = `<div style="direction:rtl; padding:40px;"><h2>${title}</h2><hr><p>${document.getElementById(id).value}</p></div>`;
+    html2pdf().from(el).save(`${title}.pdf`);
 }
 </script>
 </body>
