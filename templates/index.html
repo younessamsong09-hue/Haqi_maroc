@@ -50,5 +50,15 @@
             document.querySelector(".ticker-content").innerText = data.news; 
         }); 
     </script>
+    <div class="chat-bot" onclick="toggleChat()"><i class="fas fa-robot"></i></div> 
+    <div id="chat-win" class="chat-window"> 
+        <div class="chat-header">🤖 مساعد حقي الذكي</div> 
+        <div id="msg-box" class="chat-messages">مرحباً بيك! أنا مساعدك الرقمي، كفاش نقدر نعاونك اليوم؟</div> 
+        <div class="chat-input"> 
+            <input type="text" id="user-msg" placeholder="اكتب سؤالك هنا..."> 
+            <button onclick="sendMsg()" style="background:#daa520; border:none; padding:5px 10px; margin-right:5px; cursor:pointer;">إرسال</button> 
+        </div> 
+    </div>
+<script src="/static/js/chat.js"></script>
 </body>
 </html>
