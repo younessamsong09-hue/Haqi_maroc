@@ -1,36 +1,30 @@
-import os
-import json
+import os, json
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-def load_national_data():
+def get_data():
     all_data = []
-    base_path = os.path.join(app.root_path, 'national')
-    if os.path.exists(base_path):
-        for file in os.listdir(base_path):
-            # نتجاهل ملف البطاقات لأنه للعرض فقط
-            if file.endswith(".json") and file != "quick_cards.json":
-                with open(os.path.join(base_path, file), 'r', encoding='utf-8') as f:
-                    content = json.load(f)
+    folder = os.path.join(app.root_path, 'national')
+    if os.path.exists(folder):
+        for f in os.listdir(folder):
+            if f.endswith('.json') and f != 'quick_cards.json':
+                with open(os.path.join(folder, f), 'r', encoding='utf-8') as file:
+                    content = json.load(file)
                     all_data.extend(content if isinstance(content, list) else [content])
     return all_data
 
 @app.route('/')
-def index(): return render_template('index.html')
+def home(): return render_template('index.html')
 
 @app.route('/get_cards')
-def get_cards():
+def cards():
     path = os.path.join(app.root_path, 'national', 'quick_cards.json')
-    if os.path.exists(path):
-        with open(path, 'r', encoding='utf-8') as f: return jsonify(json.load(f))
-    return jsonify([])
+    with open(path, 'r', encoding='utf-8') as f: return jsonify(json.load(f))
 
 @app.route('/ask', methods=['POST'])
 def ask():
-    query = request.json.get('prompt', '').lower()
-    data = load_national_data()
-    # نظام بحث مرن يطابق الكلمات المفتاحية
-    matches = [i for i in data if any(k in query for k in i.get('keywords', '').split(','))]
-    return jsonify({"found": len(matches) > 0, "results": matches})
+    q = request.json.get('prompt', '').lower()
+    results = [i for i in get_data() if any(k in q for k in i['keywords'].split(','))]
+    return jsonify({"found": len(results)>0, "results": results})
     
