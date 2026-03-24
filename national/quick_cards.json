@@ -1,7 +1,1 @@
-[
-  {"title": "الحماية القانونية", "icon": "fa-gavel", "search_term": "حكرة"},
-  {"title": "الوثائق الرسمية", "icon": "fa-id-card", "search_term": "وثائق"},
-  {"title": "المالية والرسوم", "icon": "fa-coins", "search_term": "مالية"},
-  {"title": "مغاربة العالم", "icon": "fa-globe-africa", "search_term": "جالية"},
-  {"title": "الرعاية الصحية", "icon": "fa-hospital-user", "search_term": "صحة"}
-]
+[{"title": "الحماية القانونية", "icon": "fa-gavel", "search_term": "حكرة"}, {"title": "الوثائق الرسمية", "icon": "fa-id-card", "search_term": "وثائق"}, {"title": "المالية والرسوم", "icon": "fa-coins", "search_term": "مالية"}, {"title": "مغاربة العالم", "icon": "fa-globe-africa", "search_term": "جالية"}, {"title": "الرعاية الصحية", "icon": "fa-hospital-user", "search_term": "صحة"}]

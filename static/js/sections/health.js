@@ -1,8 +1,9 @@
-function renderHealth() {
-    return `
-        <div class="result-item" style="border-right: 6px solid #1e5631;">
-            <h3 style="color:#1e5631;">🏥 بوابة الرعاية الصحية 🇲🇦</h3>
-            <p>يمكنك هنا طلب المواعيد أو الاستفسار عن نظام التغطية الصحية (AMO).</p>
-            <button class="btn-action" onclick="location.reload()">العودة</button>
+
+window.renderSection = (area) => {
+    area.innerHTML = `
+        <div class="result-item" style="border-right: 8px solid #1e5631;">
+            <h3 style="color:#1e5631;">🇲🇦 قطاع الرعاية الصحية</h3>
+            <p>مرحباً بك في قسم الرعاية الصحية. هذا الجزء يعمل الآن من ملف مستقل: health.js</p>
+            <button class="btn-action" onclick="location.reload()" style="background:#1e5631; color:white; border:none; padding:10px; width:100%; border-radius:8px;">العودة للرئيسية</button>
         </div>`;
-}
+};
