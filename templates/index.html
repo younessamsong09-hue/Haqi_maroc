@@ -1,13 +1,29 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>حقي 🇲🇦 Haqi</title>
 </head>
 <body>
-    <div class="header"><h1>المملكة المغربية 🇲🇦</h1><p>بوابة حقي الرقمية</p></div>
-    <div id="quick-cards"></div>
-    <div id="editor-area"></div>
+    <div class="header">
+        <h1>المملكة المغربية</h1>
+        <h2>بوابة حقي الرقمية (Haqi Maroc)</h2>
+        <p>المنصة الذكية للقطاعات السيادية</p>
+    </div>
+    <div class="cards-grid" id="quick-cards"></div>
+    <div id="editor-area" style="max-width:600px; margin:auto; display:none;"></div>
     <script src="/static/js/editor.js"></script>
+    <script>
+        fetch('/get_cards').then(r => r.json()).then(data => {
+            document.getElementById('quick-cards').innerHTML = data.map(c => 
+                `<div class="card" onclick="openEditor('${c.search_term}')">
+                    <i class="fas ${c.icon}"></i>
+                    <div>${c.title}</div>
+                </div>`).join('');
+        });
+    </script>
 </body>
 </html>

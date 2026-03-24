@@ -1,22 +1,21 @@
-function openEditor(term) {
+async function openEditor(term) {
     const area = document.getElementById('editor-area');
-    const grid = document.getElementById('quick-cards');
-    grid.style.display = 'none';
+    document.getElementById('quick-cards').style.display = 'none';
     area.style.display = 'block';
+    area.innerHTML = '<div class="loader">جاري استدعاء القطاع السيادي...</div>';
 
-    let scriptFile = '';
-    let renderFunc = '';
+    const map = {
+        'حكرة': 'legal.js',
+        'وثائق': 'docs.js',
+        'مالية': 'finance.js',
+        'جالية': 'expats.js',
+        'صحة': 'health.js'
+    };
 
-    if (term === 'طلب') { scriptFile = 'requests.js'; renderFunc = 'renderRequestEditor'; }
-    else if (term === 'حكرة') { scriptFile = 'hokra.js'; renderFunc = 'renderHokraEditor'; }
-    else if (term === 'صحة') { scriptFile = 'health.js'; renderFunc = 'renderHealth'; }
-    else if (term === 'رخصة') { scriptFile = 'business.js'; renderFunc = 'renderBusinessEditor'; }
-    else if (term === 'مالية') { scriptFile = 'finance.js'; renderFunc = 'renderFinance'; }
-
-    if (scriptFile) {
+    if (map[term]) {
         const script = document.createElement('script');
-        script.src = '/static/js/sections/' + scriptFile;
-        script.onload = () => { area.innerHTML = window[renderFunc](area); };
+        script.src = `/static/js/sections/${map[term]}`;
+        script.onload = () => window.renderSection(area);
         document.body.appendChild(script);
     }
 }
