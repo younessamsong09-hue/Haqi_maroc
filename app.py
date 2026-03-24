@@ -14,11 +14,31 @@ def get_cards():
         with open(p, 'r', encoding='utf-8') as f: return jsonify(json.load(f))
     return jsonify([])
 
+@app.route('/generate_complaint', methods=['POST'])
+def generate_complaint():
+    data = request.json
+    name = data.get('name', '........')
+    city = data.get('city', '........')
+    target = data.get('target', '........')
+    details = data.get('details', '........')
+    
+    complaint_text = f"""إلى السيد وكيل الملك لدى المحكمة الابتدائية ب{city}
+الموضوع: شكاية من أجل الشطط في استعمال السلطة (الحكرة)
+
+لفائدة السيد: {name}
+ضد: {target}
+
+سلام تام بوجود مولانا الإمام،
+أتقدم لسيادتكم بهذه الشكاية، حيث أنني تعرضت من طرف المشتكى به إلى {details}. 
+وبناءً على مقتضيات القانون الجنائي المغربي، لا سيما الفصول التي تجرم الشطط، ألتمس منكم إعطاء تعليماتكم للضابطة القضائية قصد فتح تحقيق في النازلة.
+
+وتقبلوا فائق التقدير والاحترام."""
+    return jsonify({"text": complaint_text})
+
 @app.route('/ask', methods=['POST'])
 def ask():
     q = request.json.get('prompt', '').lower().strip()
     if not os.path.exists(DATA_PATH): return jsonify({"found": False, "results": []})
-    
     with open(DATA_PATH, 'r', encoding='utf-8') as f:
         all_data = json.load(f)
         matches = [i for i in all_data if q in i.get('title','').lower() or any(q in k for k in i.get('keywords','').split(','))]
