@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الرسوم المالية - Haqi Maroc</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <style>
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        .calc-card { max-width: 600px; margin: 50px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .result-box { background: #e9ecef; padding: 20px; border-radius: 10px; font-size: 1.2rem; font-weight: bold; color: #1a5e32; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="calc-card">
+        <h3 class="text-center mb-4"><i class="fas fa-calculator text-success"></i> حاسبة الرسوم والضرائب</h3>
+        
+        <label class="form-label">نوع العملية المالية:</label>
+        <select id="calc-type" class="form-select mb-3" onchange="updateUI()">
+            <option value="stamp">رسوم التنبر (Stamps)</option>
+            <option value="car_tax">ضريبة السيارات (Vignette)</option>
+            <option value="property">واجبات التسجيل العقاري</option>
+        </select>
+
+        <div id="input-area" class="mb-4">
+            </div>
+
+        <button onclick="calculate()" class="btn btn-success w-100 mb-3 py-2 fw-bold">احسب الآن</button>
+        
+        <div id="result" class="result-box d-none">
+            المبلغ المستحق: <span id="final-amount">0</span> درهم
+        </div>
+    </div>
+</div>
+
+<script>
+function updateUI() {
+    const type = document.getElementById('calc-type').value;
+    const area = document.getElementById('input-area');
+    area.innerHTML = '';
+
+    if(type === 'car_tax') {
+        area.innerHTML = `
+            <label class="small fw-bold">نوع الوقود:</label>
+            <select id="fuel" class="form-select mb-2">
+                <option value="gasoline">بنزين (Essence)</option>
+                <option value="diesel">غازوال (Diesel)</option>
+            </select>
+            <label class="small fw-bold">عدد الأحصنة (CV):</label>
+            <input type="number" id="hp" class="form-control" placeholder="مثلاً: 8">`;
+    } else if(type === 'stamp') {
+        area.innerHTML = `
+            <label class="small fw-bold">نوع الوثيقة:</label>
+            <select id="doc-type" class="form-select">
+                <option value="20">تصحيح الإمضاء (20 درهم)</option>
+                <option value="200">عقد كراء (200 درهم)</option>
+                <option value="500">جواز السفر (500 درهم)</option>
+            </select>`;
+    }
+}
+
+function calculate() {
+    const type = document.getElementById('calc-type').value;
+    let total = 0;
+
+    if(type === 'stamp') {
+        total = document.getElementById('doc-type').value;
+    } else if(type === 'car_tax') {
+        const hp = parseInt(document.getElementById('hp').value);
+        const fuel = document.getElementById('fuel').value;
+        // منطق مبسط للضريبة
+        if(fuel === 'gasoline') {
+            total = hp < 8 ? 350 : 650;
+        } else {
+            total = hp < 8 ? 700 : 1500;
+        }
+    }
+
+    document.getElementById('result').classList.remove('d-none');
+    document.getElementById('final-amount').innerText = total;
+}
+updateUI(); // تشغيل أولي
+</script>
+</body>
+</html>
+
