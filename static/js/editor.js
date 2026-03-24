@@ -1,12 +1,16 @@
 function openEditor(term) {
     const area = document.getElementById('editor-area');
     document.getElementById('quick-cards').style.display = 'none';
-    
-    // ربط المصطلحات بالملفات البرمجية
+    area.style.display = 'block';
+
     if (term === 'طلب') {
-        renderRequestEditor(area); // موجود مسبقاً في الملف
+        renderRequestEditor(area);
     } else if (term === 'حكرة') {
-        area.innerHTML = '<div class="result-item">محرك الشكايات القانونية (الحكرة) قيد التحديث...</div>';
+        // استدعاء ملف الحكرة ديناميكياً
+        const script = document.createElement('script');
+        script.src = '/static/js/sections/hokra.js';
+        script.onload = () => renderHokraEditor(area);
+        document.body.appendChild(script);
     } else {
         area.innerHTML = '<div class="result-item">هذا القسم سيتم ربطه بملفه المستقل قريباً.</div>';
     }
