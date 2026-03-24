@@ -30,3 +30,17 @@ function rate(n) {
     });
     msg.innerText = "شكراً لتقييمك! صوتك يساعد في تطوير خدمات تاوريرت.";
 }
+function smartSearch() {
+    let input = document.getElementById('main-search').value.toLowerCase();
+    let cards = document.querySelectorAll('.card');
+    
+    cards.forEach(card => {
+        let text = card.innerText.toLowerCase();
+        if(text.includes(input)) {
+            card.style.display = "block";
+            card.style.border = "2px solid #daa520";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}

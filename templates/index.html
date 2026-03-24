@@ -13,6 +13,9 @@
         <p style="color: white; font-size: 12px; opacity: 0.8;">الذكاء الاصطناعي في خدمة المواطن المغربي</p>
     </div>
 
+    <div style="padding: 0 20px 20px 20px;"> 
+        <input type="text" id="main-search" onkeyup="smartSearch()" placeholder="بحث سريع عن وثيقة، قانون، أو خدمة..." style="width:100%; padding:15px; background:#111; border:2px solid #daa520; border-radius:30px; color:white; font-family:inherit; text-align:center; outline:none;"> 
+    </div>
     <div id="quick-cards" class="cards-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px;">
         <div class="card" onclick="forceOpen('legal')" style="background: #111; border: 1px solid #daa520; border-radius: 15px; padding: 20px; text-align: center;">
             <i class="fas fa-gavel" style="color: #daa520; font-size: 30px;"></i>
