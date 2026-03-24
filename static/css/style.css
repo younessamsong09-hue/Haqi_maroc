@@ -1,0 +1,7 @@
+:root { --primary: #1e5631; --secondary: #c1272d; --bg: #f4f7f6; }
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; direction: rtl; }
+.header { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 0 0 25px 25px; }
+.cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; max-width: 600px; margin: auto; }
+.card { background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.card i { font-size: 28px; color: var(--primary); margin-bottom: 10px; }
+.card div { font-weight: bold; color: #333; }

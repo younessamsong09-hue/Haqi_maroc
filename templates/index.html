@@ -1,99 +1,29 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حقي المغرب - المحرر الإداري</title>
+    <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --primary: #1e5631; --secondary: #c1272d; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
-        .header { background: var(--primary); color: white; padding: 25px; text-align: center; border-radius: 0 0 30px 30px; }
-        .search-container { max-width: 500px; margin: -25px auto 20px; padding: 0 15px; }
-        .search-box { display: flex; background: white; padding: 10px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .search-box input { border: none; flex: 1; padding: 10px; outline: none; font-size: 16px; }
-        .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; max-width: 600px; margin: auto; }
-        .card { background: white; padding: 15px; border-radius: 12px; text-align: center; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.3s; }
-        .card:hover { border-color: var(--primary); }
-        .card i { font-size: 24px; color: var(--primary); margin-bottom: 8px; }
-        #results { max-width: 600px; margin: auto; padding: 15px; }
-        .result-item { background: white; padding: 20px; border-radius: 15px; border-right: 6px solid var(--secondary); margin-bottom: 15px; }
-        .form-panel { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none; margin-top: 15px; }
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn-action { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; }
-    </style>
+    <title>حقي المغرب</title>
 </head>
 <body>
-    <div class="header"><h2>حقي (Haqi Maroc)</h2><p>بوابتك الذكية للوثائق الإدارية</p></div>
-    <div class="search-container">
-        <div class="search-box">
-            <input type="text" id="query" placeholder="ابحث عن: طلب، التزام، شكاية...">
-            <button onclick="search()" style="background:none; border:none; cursor:pointer;"><i class="fas fa-search"></i></button>
+    <div class="header"><h1>حقي (Haqi)</h1></div>
+    <div class="cards-grid" id="quick-cards">
         </div>
-    </div>
-    <div class="cards-grid" id="quick-cards"></div>
-    <div id="results"></div>
+    <div id="editor-area"></div>
 
-    <div id="editor-panel" class="form-panel">
-        <h3 id="doc-title" style="color:var(--primary)"></h3>
-        <input type="text" id="user-name" placeholder="الاسم الكامل">
-        <input type="text" id="user-city" placeholder="المدينة">
-        <textarea id="user-details" rows="4" placeholder="تفاصيل إضافية (مثلاً: رقم المباراة أو غرض الالتزام)"></textarea>
-        <button class="btn-action" onclick="generateDocument()">توليد الوثيقة الآن</button>
-        <div id="final-doc" style="margin-top:20px; padding:15px; background:#f9f9f9; border:1px dashed #ccc; display:none; white-space: pre-wrap;"></div>
-    </div>
-
+    <script src="/static/js/editor.js"></script>
     <script>
-        async function loadCards() {
+        async function load() {
             const res = await fetch('/get_cards');
             const cards = await res.json();
             document.getElementById('quick-cards').innerHTML = cards.map(c => `
-                <div class="card" onclick="quickSearch('${c.search_term}')">
-                    <i class="fas ${c.icon}"></i><div>${c.title}</div>
+                <div class="card" onclick="openEditor('${c.search_term}')">
+                    <i class="fas ${c.icon}"></i>
+                    <div>${c.title}</div>
                 </div>`).join('');
         }
-
-        async function search() {
-            const q = document.getElementById('query').value;
-            const res = await fetch('/ask', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({prompt: q})
-            });
-            const data = await res.json();
-            const resultsDiv = document.getElementById('results');
-            if (data.found) {
-                resultsDiv.innerHTML = data.results.map(r => `
-                    <div class="result-item" onclick="openEditor('${r.title}')">
-                        <h4>${r.title}</h4>
-                        <p>${r.content}</p>
-                        <small style="color:var(--primary)">انقر هنا لفتح المحرر ✍️</small>
-                    </div>`).join('');
-            }
-        }
-
-        function openEditor(title) {
-            document.getElementById('editor-panel').style.display = 'block';
-            document.getElementById('doc-title').innerText = title;
-            document.getElementById('results').style.display = 'none';
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-
-        function generateDocument() {
-            const name = document.getElementById('user-name').value;
-            const city = document.getElementById('user-city').value;
-            const title = document.getElementById('doc-title').innerText;
-            const details = document.getElementById('user-details').value;
-            
-            let text = `إلى السيد الإداري المحترم،\nأنا الموقع أسفله السيد ${name} القاطن بمدينة ${city}...\nبخصوص ${title}: ${details}\nالتوقيع: __________`;
-            
-            const docDiv = document.getElementById('final-doc');
-            docDiv.innerText = text;
-            docDiv.style.display = 'block';
-        }
-
-        function quickSearch(t) { document.getElementById('query').value = t; search(); }
-        loadCards();
+        load();
     </script>
 </body>
 </html>
