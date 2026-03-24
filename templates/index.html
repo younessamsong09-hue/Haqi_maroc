@@ -6,127 +6,62 @@
     <title>بوابة حقي السيادية 🇲🇦</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 50px; }
-        .header { background: linear-gradient(45deg, #1e5631, #c1272d); padding: 25px; border-bottom: 3px solid #daa520; text-align: center; }
-        
-        /* قسم البحث */
-        .search-section { padding: 20px; }
-        #main-search { width: 100%; padding: 15px; background: #111; border: 2px solid #daa520; border-radius: 30px; color: white; text-align: center; outline: none; }
-
-        /* البطاقات الرئيسية */
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .card { background: #111; border: 1px solid #333; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .card:hover { border-color: #daa520; transform: translateY(-5px); }
-        .card i { font-size: 24px; color: #daa520; margin-bottom: 10px; display: block; }
-
-        /* أقسام الأدوات */
-        .tool-section { display: none; margin: 20px; padding: 20px; background: #0a0a0a; border: 1px solid #daa520; border-radius: 15px; }
-        textarea { width: 100%; height: 100px; background: #000; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 8px; margin: 10px 0; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-gold { background: #daa520; color: #000; }
-        .btn-green { background: #1e5631; color: #fff; }
-        .btn-red { background: #c1272d; color: #fff; }
-
-        #final-doc { background: white; color: black; padding: 15px; margin-top: 15px; border-radius: 5px; white-space: pre-wrap; display: none; text-align: right; }
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; text-align: center; }
+        .header { background: linear-gradient(45deg, #1e5631, #c1272d); padding: 20px; border-bottom: 3px solid #daa520; }
+        .btn-gold { width: 90%; padding: 20px; background: #daa520; color: #000; font-weight: bold; border: none; border-radius: 12px; margin-top: 20px; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 20px; }
+        .card { background: #111; padding: 15px; border-radius: 10px; border: 1px solid #333; }
+        .stat-bar { background: linear-gradient(90deg, #111, #1e5631); padding: 15px; margin-top: 20px; display: flex; justify-content: space-around; font-size: 12px; }
+        #portal { display: none; background: #0a0a0a; padding: 20px; border: 1px solid #daa520; margin: 15px; border-radius: 15px; }
+        textarea { width: 100%; height: 100px; background: #000; color: #fff; border: 1px solid #333; padding: 10px; margin: 10px 0; }
+        .wa-float { position: fixed; bottom: 20px; left: 20px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; text-decoration: none; z-index: 1000; }
     </style>
 </head>
 <body>
-<canvas id="bg-canvas"></canvas><a href="/admin_taourirt" class="admin-link">.</a>
-
-<div class="header">
-    <h1 style="margin:0;">🛡️ بوابة حقي السيادية</h1>
-    <p style="font-size:12px; color:#ddd;">نظام الدفاع الرقمي - تاوريرت 2026</p>
-</div>
-
-<div class="search-section">
-    <input type="text" id="main-search" onkeyup="smartSearch()" placeholder="ابحث عن خدمة أو نص قانوني...">
-</div>
-
-<div id="main-grid" class="grid-container">
-    <div class="card" onclick="openTool('justice-tool')">
-        <i class="fas fa-gavel"></i>
-        <span>محرك العدالة</span>
+    <div class="header">
+        <h2 style="margin:0;">🇲🇦 بوابة حقي السيادية</h2>
+        <p style="font-size:10px;">نظام الدفاع الرقمي عن حقوق المواطن</p>
     </div>
-    <div class="card" onclick="openTool('law-tool')">
-        <i class="fas fa-book-maritime"></i>
-        <span>رادار القوانين</span>
+
+    <button class="btn-gold" onclick="document.getElementById('portal').style.display='block'">⚖️ ابدأ محرك العدالة (رفع تظلم)</button>
+
+    <div id="portal">
+        <h4 style="color:#daa520;">صياغة شكاية مدعمة بـ GPS</h4>
+        <textarea id="case" placeholder="اكتب تفاصيل الظلم هنا..."></textarea>
+        <button onclick="getGPS()" style="width:100%; padding:10px; background:#1e5631; color:white; border:none; margin-bottom:10px;">📍 توثيق الموقع (GPS)</button>
+        <div id="gps-stat" style="font-size:10px; color:#888;">الموقع: لم يحدد بعد</div>
+        <button onclick="generate()" style="width:100%; padding:10px; background:#c1272d; color:white; border:none;">توليد الوثيقة</button>
+        <div id="res" style="display:none; background:white; color:black; padding:10px; margin-top:10px; white-space:pre-wrap; text-align:right;"></div>
     </div>
-    <div class="card" onclick="alert('قريباً: المحفظة الرقمية')">
-        <i class="fas fa-wallet"></i>
-        <span>الحقيبة الرقمية</span>
+
+    <div class="grid">
+        <div class="card"><i class="fas fa-book-scale" style="color:#daa520;"></i><br>رادار القوانين</div>
+        <div class="card"><i class="fas fa-search-location" style="color:#daa520;"></i><br>مفقودات تاوريرت</div>
+        <div class="card"><i class="fas fa-id-card" style="color:#daa520;"></i><br>دليل المساطر</div>
+        <div class="card"><i class="fas fa-headset" style="color:#daa520;"></i><br>دعم حقوقي</div>
     </div>
-    <div class="card" onclick="alert('قريباً: الرعاية الفائقة')">
-        <i class="fas fa-heartbeat"></i>
-        <span>الرعاية الفائقة</span>
+
+    <div class="stat-bar">
+        <div><b style="color:#daa520;">+1,500</b><br>مستفيد</div>
+        <div><b style="color:#daa520;">524</b><br>شكاية</div>
+        <div><b style="color:#daa520;">2026</b><br>تاوريرت</div>
     </div>
-</div>
 
-<div id="justice-tool" class="tool-section">
-    <h3 style="color:#daa520;">⚖️ صياغة شكاية مدعمة بـ GPS</h3>
-    <textarea id="case-desc" placeholder="صف واقعة الظلم هنا..."></textarea>
-    <div id="gps-info" style="font-size:11px; color:#888;">📍 الموقع: لم يحدد</div>
-    <button class="btn btn-green" onclick="getGPS()">🌍 تثبيت الموقع الجغرافي</button>
-    <button class="btn btn-gold" onclick="generateComplaint()">توليد الوثيقة الرسمية</button>
-    <div id="final-doc"></div>
-    <button class="btn" style="background:#333; color:white;" onclick="closeTools()">🏠 العودة</button>
-</div>
+    <a href="https://wa.me/212XXXXXXXX" class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
-<div id="law-tool" class="tool-section">
-    <h3 style="color:#daa520;">🔍 البحث القانوني السريع</h3>
-    <input type="text" id="law-input" onkeyup="internalLawSearch()" placeholder="اكتب (رشوة، نصب، عقار)..." style="width:100%; padding:10px; background:#000; border:1px solid #daa520; color:white;">
-    <div id="law-res" style="margin-top:15px; font-size:14px; color:#ccc;"></div>
-    <button class="btn" style="background:#333; color:white; margin-top:10px;" onclick="closeTools()">🏠 العودة</button>
-</div>
-
-<script>
-    function openTool(id) {
-        document.getElementById('main-grid').style.display = 'none';
-        document.querySelectorAll('.tool-section').forEach(s => s.style.display = 'none');
-        document.getElementById(id).style.display = 'block';
-    }
-
-    function closeTools() {
-        document.getElementById('main-grid').style.display = 'grid';
-        document.querySelectorAll('.tool-section').forEach(s => s.style.display = 'none');
-    }
-
-    let coords = "غير محدد";
-    function getGPS() {
-        navigator.geolocation.getCurrentPosition(p => {
-            coords = `${p.coords.latitude}, ${p.coords.longitude}`;
-            document.getElementById('gps-info').innerText = "✅ تم التوثيق: " + coords;
-        });
-    }
-
-    function generateComplaint() {
-        const text = document.getElementById('case-desc').value;
-        const doc = document.getElementById('final-doc');
-        doc.innerText = `إلى السيد وكيل الملك \nشكاية تظلم رقمية \n\nالواقعة: ${text}\n\nGPS: ${coords}\nالتاريخ: ${new Date().toLocaleString()}`;
-        doc.style.display = 'block';
-    }
-
-    function smartSearch() {
-        let input = document.getElementById('main-search').value.toLowerCase();
-        let cards = document.querySelectorAll('.card');
-        cards.forEach(c => {
-            c.style.display = c.innerText.toLowerCase().includes(input) ? "block" : "none";
-        });
-    }
-
-    async function internalLawSearch() {
-        const q = document.getElementById('law-input').value.toLowerCase();
-        const res = document.getElementById('law-res');
-        if(q.length < 2) return;
-        const response = await fetch('/static/data/laws.json');
-        const laws = await response.json();
-        const found = laws.find(l => l.keyword.includes(q) || l.content.includes(q));
-        res.innerHTML = found ? `<b style="color:#daa520;">${found.title}:</b><br>${found.content}` : "❌ لا يوجد نص مباشر.";
-    }
-</script>
-    <div id="stats-bar" style="margin: 20px; padding: 15px; background: linear-gradient(90deg, #111, #1e5631); border-radius: 10px; border-left: 5px solid #daa520; display: flex; justify-content: space-around; text-align: center;"> 
-        <div><b style="color:#daa520; font-size: 20px;">+1,250</b><br><small>مواطن مستفيد</small></div> 
-        <div><b style="color:#daa520; font-size: 20px;">482</b><br><small>شكاية موثقة</small></div> 
-        <div><b style="color:#daa520; font-size: 20px;">98%</b><br><small>نسبة الوعي</small></div> 
-    </div>
+    <script>
+        let coords = "غير محدد";
+        function getGPS() {
+            navigator.geolocation.getCurrentPosition(p => {
+                coords = `${p.coords.latitude}, ${p.coords.longitude}`;
+                document.getElementById('gps-stat').innerText = "✅ تم التوثيق: " + coords;
+            });
+        }
+        function generate() {
+            const r = document.getElementById('res');
+            r.style.display = 'block';
+            r.innerText = `إلى السيد وكيل الملك \nتظلم رقمي \nالواقعة: ${document.getElementById('case').value}\nGPS: ${coords}`;
+        }
+    </script>
 </body>
 </html>
