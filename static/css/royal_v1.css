@@ -1,0 +1,26 @@
+:root { --gold: #daa520; --green: #1e5631; --red: #c1272d; }
+body { 
+    background: #050505; color: white; direction: rtl; 
+    font-family: 'Amiri', serif; margin: 0; overflow-x: hidden; 
+}
+.hero { 
+    background: linear-gradient(135deg, var(--green), #000, var(--red));
+    padding: 80px 20px; text-align: center; border-bottom: 4px solid var(--gold);
+    animation: glow 3s infinite alternate;
+}
+@keyframes glow { from { box-shadow: 0 0 10px var(--green); } to { box-shadow: 0 0 20px var(--red); } }
+.grid { 
+    display: grid; grid-template-columns: repeat(2, 1fr); 
+    gap: 15px; padding: 25px; max-width: 600px; margin: auto; 
+}
+.sector-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(218,165,32,0.3);
+    border-radius: 20px; padding: 30px 10px; text-align: center;
+    transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.sector-card:hover { 
+    background: var(--gold); color: black; transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(218,165,32,0.4);
+}
+.sector-card i { font-size: 35px; color: var(--gold); margin-bottom: 15px; }
+.sector-card:hover i { color: black; }
