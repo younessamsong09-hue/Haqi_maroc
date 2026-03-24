@@ -1,34 +1,44 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/static/css/royal_v1.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css?v=2026">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>المملكة المغربية - بوابة حقي</title>
+    <title>بوابة حقي السيادية 🇲🇦</title>
 </head>
 <body>
-    <div class="hero">
-        <h1 class="gold-text">🇲🇦 بوابة حقي السيادية</h1>
-        <p>الذكاء الاصطناعي في خدمة المواطن المغربي</p>
+    <div class="header" style="background: linear-gradient(to right, #1e5631, #c1272d); padding: 30px; text-align: center; border-bottom: 4px solid #daa520;">
+        <h1 style="color: #daa520; margin: 0;">🇲🇦 بوابة حقي السيادية</h1>
+        <p style="color: white; font-size: 12px; opacity: 0.8;">الذكاء الاصطناعي في خدمة المواطن المغربي</p>
     </div>
-    <div class="grid" id="main-grid">
-        <div class="sector-card" onclick="alert('جاري تحليل آلاف الوثائق القانونية...')">
-            <i class="fas fa-gavel"></i>
-            <div>الدرع القانوني</div>
+
+    <div id="quick-cards" class="cards-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px;">
+        <div class="card" onclick="forceOpen('legal')" style="background: #111; border: 1px solid #daa520; border-radius: 15px; padding: 20px; text-align: center;">
+            <i class="fas fa-gavel" style="color: #daa520; font-size: 30px;"></i>
+            <p style="color: white; margin-top: 10px;">الدرع القانوني</p>
         </div>
-        <div class="sector-card">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <div>المالية الذكية</div>
-        </div>
-        <div class="sector-card">
-            <i class="fas fa-passport"></i>
-            <div>الحقيبة الرقمية</div>
-        </div>
-        <div class="sector-card">
-            <i class="fas fa-hand-holding-heart"></i>
-            <div>الرعاية الفائقة</div>
+        <div class="card" onclick="forceOpen('docs')" style="background: #111; border: 1px solid #daa520; border-radius: 15px; padding: 20px; text-align: center;">
+            <i class="fas fa-id-card" style="color: #daa520; font-size: 30px;"></i>
+            <p style="color: white; margin-top: 10px;">الحقيبة الرقمية</p>
         </div>
     </div>
+
+    <div id="service-area" style="display: none; padding: 20px;"></div>
+
+    <script>
+        function forceOpen(section) {
+            const area = document.getElementById('service-area');
+            const grid = document.getElementById('quick-cards');
+            grid.style.display = 'none';
+            area.style.display = 'block';
+            
+            // استدعاء ملف الخدمة مباشرة
+            const script = document.createElement('script');
+            script.src = `/static/js/sections/${section}.js?t=${Date.now()}`;
+            script.onload = () => { if(window.renderSection) window.renderSection(area); };
+            document.body.appendChild(script);
+        }
+    </script>
 </body>
 </html>
